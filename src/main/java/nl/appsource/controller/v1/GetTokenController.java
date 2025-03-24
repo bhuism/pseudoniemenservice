@@ -30,19 +30,18 @@ public final class GetTokenController implements GetTokenApi, VersionOneControll
      * ResponseEntity with a status of UNPROCESSABLE_ENTITY if the token cannot be retrieved.
      */
     @Override
-    public ResponseEntity<WsGetTokenResponse> getToken(final String callerOIN,
-                                                       final WsGetTokenRequest wsGetTokenRequest) {
+    public ResponseEntity<WsGetTokenResponse> getToken(final WsGetTokenRequest wsGetTokenRequest) {
         try {
-            final String recipientOIN = wsGetTokenRequest.getRecipientOIN();
+            final String sender = wsGetTokenRequest.getSender();
 
             final WsIdentifier identifier = wsGetTokenRequest.getIdentifier();
 
             final String scope = wsGetTokenRequest.getScope();
 
-            // lookup caller
-            // final Organisation organisation = organisatieRepository.findByOin(callerOIN).orElseThrow(RuntimeException::new);
+            // lookup sender
+            // final Organisation organisation = organisatieRepository.findByOin(sender).orElseThrow(RuntimeException::new);
 
-            final WsGetTokenResponse wsGetTokenResponse = getTokenService.getWsGetTokenResponse(recipientOIN, identifier, scope);
+            final WsGetTokenResponse wsGetTokenResponse = getTokenService.getWsGetTokenResponse(sender, identifier, scope);
             return ResponseEntity.ok(wsGetTokenResponse);
         } catch (final Exception e) {
             log.error("", e);

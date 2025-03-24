@@ -38,14 +38,12 @@ public final class ExchangeTokenController implements ExchangeTokenApi, VersionO
      * method validates the caller's OIN, processes the incoming token using the specified
      * identifier type, and constructs a response accordingly.
      *
-     * @param callerOIN                           The identifier of the requesting organization
-     *                                            (OIN).
      * @param wsExchangeTokenForIdentifierRequest The request containing the token and identifier
      *                                            type details.
      * @return A response entity containing the converted identifier or a status indicating failure.
      */
     @Override
-    public ResponseEntity<WsExchangeTokenResponse> exchangeToken(final String callerOIN, final WsExchangeTokenRequest wsExchangeTokenForIdentifierRequest) {
+    public ResponseEntity<WsExchangeTokenResponse> exchangeToken(final WsExchangeTokenRequest wsExchangeTokenForIdentifierRequest) {
         try {
 
             // lookup caller
@@ -55,7 +53,7 @@ public final class ExchangeTokenController implements ExchangeTokenApi, VersionO
 
             // decrypt token
 
-            final String serializedToken = aesGcmCryptographerService.decrypt(wsExchangeTokenForIdentifierRequest.getToken(), callerOIN);
+            final String serializedToken = aesGcmCryptographerService.decrypt(wsExchangeTokenForIdentifierRequest.getToken(), wsExchangeTokenForIdentifierRequest.getOrganisation());
 
             // deserialize token
 
@@ -63,7 +61,7 @@ public final class ExchangeTokenController implements ExchangeTokenApi, VersionO
 
             // validate token
 
-            if (!Objects.equals(callerOIN, token.getRecipientOIN())) {
+            if (!Objects.equals(wsExchangeTokenForIdentifierRequest.getOrganisation(), token.getRecipientOIN())) {
                 throw new RuntimeException("CallerOIN and token mismatch");
             }
 
@@ -83,7 +81,7 @@ public final class ExchangeTokenController implements ExchangeTokenApi, VersionO
                 // BSN -> ORHANISATION_PSEUDO conversion
                 case ORGANISATION_PSEUDO:
                     final Identifier identifier = Identifier.fromBsn(token.getBsn(), token.getScope());
-                    final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, callerOIN);
+                    final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, wsExchangeTokenForIdentifierRequest.getOrganisation());
                     wsIdentifierBuilder.type(ORGANISATION_PSEUDO).value(encryptedIdentifier);
                     break;
 

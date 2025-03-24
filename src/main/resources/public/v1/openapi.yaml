@@ -12,8 +12,6 @@ paths:
         - Token
       summary: get a token
       operationId: getToken
-      parameters:
-        - $ref: "#/components/parameters/callerOIN"
       requestBody:
         $ref: '#/components/requestBodies/getTokenRequest'
       responses:
@@ -26,8 +24,6 @@ paths:
         - Identifier
       summary: exchange token for an identifier
       operationId: exchangeToken
-      parameters:
-        - $ref: "#/components/parameters/callerOIN"
       requestBody:
         $ref: '#/components/requestBodies/exchangeTokenRequest'
       responses:
@@ -39,34 +35,18 @@ paths:
         - Identifier
       summary: exchange an identifier for another identifier
       operationId: exchangeIdentifier
-      parameters:
-        - $ref: "#/components/parameters/callerOIN"
       requestBody:
         $ref: '#/components/requestBodies/exchangeIdentifierRequest'
       responses:
         '200':
           $ref: '#/components/responses/exchangeIdentifierResponse'
 components:
-  parameters:
-    callerOIN:
-      name: callerOIN
-      in: header
-      required: true
-      schema:
-        $ref: '#/components/schemas/oin'
   schemas:
     scope:
       type: string
     token:
       nullable: false
       type: string
-    oin:
-      nullable: false
-      type: string
-      pattern: '^\d{20}$'
-      minLength: 20
-      maxLength: 20
-      example: 12340123401234012340
     identifier:
       nullable: false
       type: object
@@ -127,11 +107,11 @@ components:
             properties:
               identifier:
                 $ref: '#/components/schemas/identifier'
-              recipientOIN:
-                $ref: '#/components/schemas/oin'
+              receiver:
+                type: string
               scope:
                 $ref: '#/components/schemas/scope'
-              organisation:
+              sender:
                 type: string
     exchangeTokenRequest:
       required: true
@@ -155,8 +135,6 @@ components:
             properties:
               identifier:
                 $ref: '#/components/schemas/identifier'
-              recipientOIN:
-                $ref: '#/components/schemas/oin'
               recipientIdentifierType:
                 $ref: '#/components/schemas/identifierTypes'
               scope:

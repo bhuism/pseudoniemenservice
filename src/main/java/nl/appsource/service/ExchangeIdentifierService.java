@@ -24,7 +24,7 @@ public final class ExchangeIdentifierService {
     public WsExchangeIdentifierResponse exchangeIdentifier(final WsExchangeIdentifierRequest wsExchangeIdentifierForIdentifierRequest) throws InvalidCipherTextException, IOException {
 
         final WsIdentifier wsIdentifierRequest = wsExchangeIdentifierForIdentifierRequest.getIdentifier();
-        final String recipientOIN = wsExchangeIdentifierForIdentifierRequest.getRecipientOIN();
+        final String organisation = wsExchangeIdentifierForIdentifierRequest.getOrganisation();
         final WsIdentifierTypes recipientIdentifierType = wsExchangeIdentifierForIdentifierRequest.getRecipientIdentifierType();
 
         final WsExchangeIdentifierResponse.WsExchangeIdentifierResponseBuilder wsExchangeIdentifierResponseBuilder = WsExchangeIdentifierResponse.builder();
@@ -36,7 +36,7 @@ public final class ExchangeIdentifierService {
             // BSN to ORG_PSEUDO
             final Identifier identifier = Identifier.fromBsn(wsIdentifierRequest.getValue(), wsExchangeIdentifierForIdentifierRequest.getScope());
 
-            final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, recipientOIN);
+            final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, organisation);
 
             wsIdentifierBuilder
                 .type(ORGANISATION_PSEUDO)
@@ -45,7 +45,7 @@ public final class ExchangeIdentifierService {
         } else if (ORGANISATION_PSEUDO.equals(wsIdentifierRequest.getType()) && BSN.equals(recipientIdentifierType)) {
 
             // ORG_PSEUDO to BSN
-            final String bsn = aesGcmSivCryptographerService.decryptIdentifier(wsIdentifierRequest.getValue(), recipientOIN).getBsn();
+            final String bsn = aesGcmSivCryptographerService.decryptIdentifier(wsIdentifierRequest.getValue(), organisation).getBsn();
 
             wsIdentifierBuilder
                 .type(BSN)

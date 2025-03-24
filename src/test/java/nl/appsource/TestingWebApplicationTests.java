@@ -63,11 +63,9 @@ class TestingWebApplicationTests {
         """)
     void testGetAtokenExchangeForBSN() {
         // get a token
-        final Map<String, Object> getTokenBody = Map.of("recipientOIN", "00000008855800191020", "identifier",
+        final Map<String, Object> getTokenBody = Map.of("sender", "00000008855800191020", "receiver", "00000000123450112345", "identifier",
             Map.of("type", "BSN", "value", "012345679"));
-        final HttpEntity<Map<String, Object>> httpEntityGetToken = new HttpEntity<>(getTokenBody,
-            new HttpHeaders(CollectionUtils.toMultiValueMap(
-                of("callerOIN", List.of("00000000123450112345")))));
+        final HttpEntity<Map<String, Object>> httpEntityGetToken = new HttpEntity<>(getTokenBody);
         final ResponseEntity<Map> tokenExchange = restTemplate.exchange("/v1/getToken", HttpMethod.POST,
             httpEntityGetToken, Map.class);
         assertThat(tokenExchange.getStatusCode()).isEqualTo(HttpStatus.OK);
@@ -78,10 +76,8 @@ class TestingWebApplicationTests {
 
         // change token for identifier
         final String token = (String) tokenExchange.getBody().get("token");
-        final Map<String, String> exchangeTokenBody = Map.of("token", token, "identifierType", "BSN");
-        final HttpEntity<Map<String, String>> httpEntityExchangeToken = new HttpEntity<>(exchangeTokenBody,
-            new HttpHeaders(CollectionUtils.toMultiValueMap(
-                of("callerOIN", List.of("00000008855800191020")))));
+        final Map<String, String> exchangeTokenBody = Map.of("token", token, "identifierType", "BSN", "organisation", "00000008855800191020");
+        final HttpEntity<Map<String, String>> httpEntityExchangeToken = new HttpEntity<>(exchangeTokenBody);
         final ResponseEntity<Map> identifierExchange = restTemplate.exchange("/v1/exchangeToken", HttpMethod.POST,
             httpEntityExchangeToken,
             Map.class);

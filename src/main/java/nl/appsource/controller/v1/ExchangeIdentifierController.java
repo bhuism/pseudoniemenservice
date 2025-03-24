@@ -23,15 +23,13 @@ public final class ExchangeIdentifierController implements ExchangeIdentifierApi
     /**
      * Exchanges an identifier based on the provided caller OIN and request data.
      *
-     * @param callerOIN         The OIN of the caller initiating the request.
      * @param wsExchangeRequest The request object containing the identifier and additional data for
      *                          the exchange process.
      * @return A ResponseEntity containing a WsExchangeIdentifierResponse if the exchange is
      * successful, or a ResponseEntity with HTTP status UNPROCESSABLE_ENTITY if the exchange fails.
      */
     @Override
-    public ResponseEntity<WsExchangeIdentifierResponse> exchangeIdentifier(final String callerOIN,
-                                                                           final WsExchangeIdentifierRequest wsExchangeRequest) {
+    public ResponseEntity<WsExchangeIdentifierResponse> exchangeIdentifier(final WsExchangeIdentifierRequest wsExchangeRequest) {
         try {
 
             // lookup caller

@@ -1,6 +1,7 @@
 package nl.appsource.service.crypto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import nl.appsource.configuration.PseudoniemenServiceProperties;
 import nl.appsource.model.v1.Token;
 import nl.appsource.service.serializer.TokenSerializer;
@@ -31,6 +32,7 @@ import static nl.appsource.utils.AesUtil.IV_LENGTH;
  */
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class AesGcmCryptographerServiceImpl implements AesGcmCryptographerService {
 
     private final PseudoniemenServiceProperties pseudoniemenServiceProperties;
@@ -88,6 +90,9 @@ public class AesGcmCryptographerServiceImpl implements AesGcmCryptographerServic
      */
 
     public String encrypt(final String plaintext, final String salt) throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
+
+        log.debug("salt: {}", salt);
+
         final Cipher cipher = AesUtil.createCipher();
         final GCMParameterSpec gcmParameterSpec = AesUtil.generateIV();
         final SecretKey secretKey = createSecretKey(salt);
@@ -143,6 +148,8 @@ public class AesGcmCryptographerServiceImpl implements AesGcmCryptographerServic
         InvalidKeyException,
         IllegalBlockSizeException,
         BadPaddingException {
+
+        log.debug("salt: {}", salt);
 
         final Cipher cipher = AesUtil.createCipher();
         final byte[] encryptedWithIV = Base64Util.decode(ciphertextWithIv);
