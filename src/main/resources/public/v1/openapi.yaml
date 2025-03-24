@@ -131,6 +131,8 @@ components:
                 $ref: '#/components/schemas/oin'
               scope:
                 $ref: '#/components/schemas/scope'
+              organisation:
+                type: string
     exchangeTokenRequest:
       required: true
       content:
@@ -143,9 +145,8 @@ components:
                 $ref: '#/components/schemas/identifierTypes'
               scope:
                 $ref: '#/components/schemas/scope'
-#            required:
-#              - token
-#              - identifierType
+              organisation:
+                type: string
     exchangeIdentifierRequest:
       required: true
       content:
@@ -160,3 +161,5 @@ components:
                 $ref: '#/components/schemas/identifierTypes'
               scope:
                 $ref: '#/components/schemas/scope'
+              organisation:
+                type: string
