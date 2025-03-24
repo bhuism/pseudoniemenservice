@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: Pseudoniemen Service (@git.commit.id.abbrev@)
-  description: See [PseudoniemenService](https://github.com/bhuism/pseudoniemenservice/commit/@git.commit.id@)
+  description: See [PseudoniemenService](https://github.com/minvws/prs-documentation)
   version: 0.1.0
 servers:
   - url: /v1
