@@ -29,7 +29,8 @@ public final class GetTokenService {
     private final TokenSerializer tokenSerializer;
 
     public WsGetTokenResponse getWsGetTokenResponse(final String recipientOIN,
-                                                    final WsIdentifier identifier)
+                                                    final WsIdentifier identifier,
+                                                    final String scope)
         throws InvalidCipherTextException, IOException, InvalidAlgorithmParameterException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 
         final long creationDate = System.currentTimeMillis();
@@ -50,7 +51,7 @@ public final class GetTokenService {
                     "Unsupported identifier type: " + identifier.getType());
         }
 
-        final Token token = Token.fromBsn(bsn, recipientOIN, creationDate);
+        final Token token = Token.fromBsn(bsn, recipientOIN, creationDate, scope);
 
         final String encryptedTokenString = aesGcmCryptographerService.encryptToken(token, recipientOIN);
 

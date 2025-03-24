@@ -82,7 +82,7 @@ public final class ExchangeTokenController implements ExchangeTokenApi, VersionO
 
                 // BSN -> ORHANISATION_PSEUDO conversion
                 case ORGANISATION_PSEUDO:
-                    final Identifier identifier = Identifier.fromBsn(token.getBsn());
+                    final Identifier identifier = Identifier.fromBsn(token.getBsn(), token.getScope());
                     final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, callerOIN);
                     wsIdentifierBuilder.type(ORGANISATION_PSEUDO).value(encryptedIdentifier);
                     break;

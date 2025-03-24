@@ -19,9 +19,9 @@ public class Token {
     private String bsn;
     private String recipientOIN;
     private Long creationDate;
+    private String scope;
 
-
-    public static Token fromBsn(final String bsn, final String oin, final Long creationDate) {
+    public static Token fromBsn(final String bsn, final String oin, final Long creationDate, final String scope) {
 
         final Token token = new Token();
 
@@ -29,6 +29,7 @@ public class Token {
         token.setBsn(bsn);
         token.setRecipientOIN(oin);
         token.setCreationDate(creationDate);
+        token.setScope(scope);
 
         return token;
     }

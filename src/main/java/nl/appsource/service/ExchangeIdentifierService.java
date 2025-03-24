@@ -34,7 +34,7 @@ public final class ExchangeIdentifierService {
         if (BSN.equals(wsIdentifierRequest.getType()) && ORGANISATION_PSEUDO.equals(recipientIdentifierType)) {
 
             // BSN to ORG_PSEUDO
-            final Identifier identifier = Identifier.fromBsn(wsIdentifierRequest.getValue());
+            final Identifier identifier = Identifier.fromBsn(wsIdentifierRequest.getValue(), wsExchangeIdentifierForIdentifierRequest.getScope());
 
             final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, recipientOIN);
 

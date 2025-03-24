@@ -37,11 +37,12 @@ public final class GetTokenController implements GetTokenApi, VersionOneControll
 
             final WsIdentifier identifier = wsGetTokenRequest.getIdentifier();
 
+            final String scope = wsGetTokenRequest.getScope();
+
             // lookup caller
             // final Organisation organisation = organisatieRepository.findByOin(callerOIN).orElseThrow(RuntimeException::new);
 
-            final WsGetTokenResponse wsGetTokenResponse = getTokenService.getWsGetTokenResponse(
-                recipientOIN, identifier);
+            final WsGetTokenResponse wsGetTokenResponse = getTokenService.getWsGetTokenResponse(recipientOIN, identifier, scope);
             return ResponseEntity.ok(wsGetTokenResponse);
         } catch (final Exception e) {
             log.error("", e);

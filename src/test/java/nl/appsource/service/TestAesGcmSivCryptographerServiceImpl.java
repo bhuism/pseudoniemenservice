@@ -56,7 +56,7 @@ class TestAesGcmSivCryptographerServiceImpl {
         testStrings.forEach(plain -> {
             try {
                 // GIVEN
-                final String crypted = aesGcmSivCryptographerService.encryptIdentifier(Identifier.fromBsn(plain), "helloHowAreyo12345678");
+                final String crypted = aesGcmSivCryptographerService.encryptIdentifier(Identifier.fromBsn(plain, null), "helloHowAreyo12345678");
                 // WHEN
                 final Identifier actual = aesGcmSivCryptographerService.decryptIdentifier(crypted, "helloHowAreyo12345678");
                 // THEN
@@ -77,7 +77,7 @@ class TestAesGcmSivCryptographerServiceImpl {
     void testCiphertextIsTheSameForSamePlaintext() {
         // GIVEN
         final String plaintext = "This is a test message to ensure ciphertext is different!";
-        final Identifier identifier = Identifier.fromBsn(plaintext);
+        final Identifier identifier = Identifier.fromBsn(plaintext, null);
         // WHEN
         final String encryptedMessage1 = aesGcmSivCryptographerService.encryptIdentifier(identifier, "aniceSaltGorYu");
         final String encryptedMessage2 = aesGcmSivCryptographerService.encryptIdentifier(identifier, "aniceSaltGorYu");

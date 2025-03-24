@@ -16,13 +16,15 @@ public class Identifier {
 
     private String version;
     private String bsn;
+    private String scope;
 
-    public static Identifier fromBsn(final String bsn) {
+    public static Identifier fromBsn(final String bsn, final String scope) {
 
         final Identifier identifier = new Identifier();
 
         identifier.setVersion(VERSION);
         identifier.setBsn(bsn);
+        identifier.setScope(scope);
 
         return identifier;
     }
