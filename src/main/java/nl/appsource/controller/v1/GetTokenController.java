@@ -23,7 +23,6 @@ public final class GetTokenController implements GetTokenApi, VersionOneControll
     /**
      * Retrieves a token based on the provided caller identifier and request details.
      *
-     * @param callerOIN         The identifier of the caller organization initiating the request.
      * @param wsGetTokenRequest The request object containing the recipient organization identifier
      *                          and additional details.
      * @return A ResponseEntity containing the token if the request is successful, or a

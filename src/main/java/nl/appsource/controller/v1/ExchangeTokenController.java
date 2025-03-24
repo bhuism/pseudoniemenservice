@@ -62,7 +62,7 @@ public final class ExchangeTokenController implements ExchangeTokenApi, VersionO
             // validate token
 
             if (!Objects.equals(wsExchangeTokenForIdentifierRequest.getOrganisation(), token.getRecipientOIN())) {
-                throw new RuntimeException("CallerOIN and token mismatch");
+                throw new RuntimeException("org-token mismatch");
             }
 
             // create response
