@@ -20,7 +20,7 @@ spring:
     name: Pseudoniemen Service
   jackson:
     time-zone: Europe/Amsterdam
-
+    default-property-inclusion: non_null
 management:
   endpoint:
     info:

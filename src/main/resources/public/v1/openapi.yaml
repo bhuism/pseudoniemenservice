@@ -87,12 +87,16 @@ components:
       properties:
         token:
           $ref: '#/components/schemas/token'
+        domein:
+          type: string
     exchangeTokenResponse:
       nullable: false
       type: object
       properties:
         identifier:
           $ref: '#/components/schemas/identifier'
+        domein:
+          type: string
     exchangeIdentifierResponse:
       nullable: false
       type: object
