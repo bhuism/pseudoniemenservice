@@ -4,7 +4,7 @@ info:
   description: See [PseudoniemenService](https://github.com/minvws/prs-documentation)
   version: 0.1.0
 servers:
-  - url: /v1
+  - url: /api/v1
 paths:
   /getToken:
     post:

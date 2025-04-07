@@ -35,7 +35,22 @@ public class ExchangeTokenService {
 
     private final AesGcmSivCryptographerService aesGcmSivCryptographerService;
 
-    public ResponseEntity<WsExchangeTokenResponse> exchangeToken(WsExchangeTokenRequest wsExchangeTokenForIdentifierRequest) throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidCipherTextException, IOException {
+    /**
+     * exchange a token.
+     * @param wsExchangeTokenForIdentifierRequest
+     * @return the response
+     * @throws NoSuchPaddingException
+     * @throws NoSuchAlgorithmException
+     * @throws InvalidAlgorithmParameterException
+     * @throws InvalidKeyException
+     * @throws IllegalBlockSizeException
+     * @throws BadPaddingException
+     * @throws InvalidCipherTextException
+     * @throws IOException
+     */
+
+    public ResponseEntity<WsExchangeTokenResponse> exchangeToken(final WsExchangeTokenRequest wsExchangeTokenForIdentifierRequest)
+        throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidCipherTextException, IOException {
         // lookup caller
         // final Organisation organisation = organisatieRepository.findByOin(callerOIN).orElseThrow(RuntimeException::new);
 

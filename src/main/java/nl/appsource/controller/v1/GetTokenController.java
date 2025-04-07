@@ -2,7 +2,6 @@ package nl.appsource.controller.v1;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.appsource.persistence.OrganisatieRepository;
 import nl.appsource.pseudoniemenservice.generated.server.api.GetTokenApi;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsGetTokenRequest;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsGetTokenResponse;
@@ -17,8 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 public final class GetTokenController implements GetTokenApi, VersionOneController {
 
     private final GetTokenService getTokenService;
-
-    private final OrganisatieRepository organisatieRepository;
 
     /**
      * Retrieves a token based on the provided caller identifier and request details.

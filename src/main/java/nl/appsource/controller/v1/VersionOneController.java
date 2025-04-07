@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface VersionOneController {
 
     @SuppressWarnings({"checkstyle:InterfaceIsType", "checkstyle:interfaceistype"})
-    String V1 = "/v1";
+    String V1 = "/api/v1";
 
 }

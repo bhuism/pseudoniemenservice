@@ -2,7 +2,6 @@ package nl.appsource.controller.v1;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import nl.appsource.persistence.OrganisatieRepository;
 import nl.appsource.pseudoniemenservice.generated.server.api.ExchangeIdentifierApi;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsExchangeIdentifierRequest;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsExchangeIdentifierResponse;
