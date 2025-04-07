@@ -35,7 +35,7 @@ public final class GetTokenController implements GetTokenApi, VersionOneControll
 
             final WsIdentifier identifier = wsGetTokenRequest.getIdentifier();
 
-            final String scope = wsGetTokenRequest.getScope();
+            final String scope = "" + wsGetTokenRequest.getScope();
 
             // lookup sender
             // final Organisation organisation = organisatieRepository.findByOin(sender).orElseThrow(RuntimeException::new);

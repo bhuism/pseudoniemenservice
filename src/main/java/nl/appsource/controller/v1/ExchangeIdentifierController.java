@@ -18,7 +18,7 @@ public final class ExchangeIdentifierController implements ExchangeIdentifierApi
 
     private final ExchangeIdentifierService exchangeIdentifierService;
 
-    private final OrganisatieRepository organisatieRepository;
+    // private final OrganisatieRepository organisatieRepository;
 
     /**
      * Exchanges an identifier based on the provided caller OIN and request data.
