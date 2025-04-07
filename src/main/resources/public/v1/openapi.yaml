@@ -43,7 +43,7 @@ paths:
 components:
   schemas:
     scope:
-      type: string
+      type: object
     token:
       nullable: false
       type: string
