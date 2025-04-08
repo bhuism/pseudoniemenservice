@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 
 @Getter
 @Setter
@@ -16,9 +18,9 @@ public class Identifier {
 
     private String version;
     private String bsn;
-    private String scope;
+    private Map<String, Object> scope;
 
-    public static Identifier fromBsn(final String bsn, final String scope) {
+    public static Identifier fromBsn(final String bsn, final Map<String, Object> scope) {
 
         final Identifier identifier = new Identifier();
 

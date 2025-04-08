@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Map;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,9 +21,9 @@ public class Token {
     private String bsn;
     private String recipientOIN;
     private Long creationDate;
-    private String scope;
+    private Map<String, Object> scope;
 
-    public static Token fromBsn(final String bsn, final String oin, final Long creationDate, final String scope) {
+    public static Token fromBsn(final String bsn, final String oin, final Long creationDate, final Map<String, Object> scope) {
 
         final Token token = new Token();
 

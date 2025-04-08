@@ -1,11 +1,12 @@
 package nl.appsource.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import nl.appsource.model.v1.Identifier;
 import nl.appsource.model.v1.Token;
-import nl.appsource.pseudoniemenservice.generated.server.model.WsExchangeTokenRequest;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsExchangeTokenResponse;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifier;
+import nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifierTypes;
 import nl.appsource.service.crypto.AesGcmCryptographerService;
 import nl.appsource.service.crypto.AesGcmSivCryptographerService;
 import nl.appsource.service.serializer.TokenSerializer;
@@ -17,9 +18,11 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 import java.util.Objects;
 
 import static nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifierTypes.BSN;
@@ -35,10 +38,15 @@ public class ExchangeTokenService {
 
     private final AesGcmSivCryptographerService aesGcmSivCryptographerService;
 
+    private final ObjectMapper objectMapper;
+
     /**
-     * exchange a token.
-     * @param wsExchangeTokenForIdentifierRequest
-     * @return the response
+     * Exchange a token for an Identifier.
+     * @param tokenString
+     * @param identifierType
+     * @param scope
+     * @param organisation
+     * @return the identifier.
      * @throws NoSuchPaddingException
      * @throws NoSuchAlgorithmException
      * @throws InvalidAlgorithmParameterException
@@ -49,7 +57,7 @@ public class ExchangeTokenService {
      * @throws IOException
      */
 
-    public ResponseEntity<WsExchangeTokenResponse> exchangeToken(final WsExchangeTokenRequest wsExchangeTokenForIdentifierRequest)
+    public ResponseEntity<WsExchangeTokenResponse> exchangeToken(final String tokenString, final WsIdentifierTypes identifierType, final Map<String, Object> scope, final String organisation)
         throws NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, InvalidCipherTextException, IOException {
         // lookup caller
         // final Organisation organisation = organisatieRepository.findByOin(callerOIN).orElseThrow(RuntimeException::new);
@@ -58,7 +66,7 @@ public class ExchangeTokenService {
 
         // decrypt token
 
-        final String serializedToken = aesGcmCryptographerService.decrypt(wsExchangeTokenForIdentifierRequest.getToken(), wsExchangeTokenForIdentifierRequest.getOrganisation());
+        final String serializedToken = aesGcmCryptographerService.decrypt(tokenString, organisation);
 
         // deserialize token
 
@@ -66,8 +74,21 @@ public class ExchangeTokenService {
 
         // validate token
 
-        if (!Objects.equals(wsExchangeTokenForIdentifierRequest.getOrganisation(), token.getRecipientOIN())) {
+        if (!Objects.equals(organisation, token.getRecipientOIN())) {
             throw new RuntimeException("org-token mismatch");
+        }
+
+        final StringWriter stringWriter = new StringWriter();
+        objectMapper.writeValue(stringWriter, scope);
+        final String parameterScope = stringWriter.toString();
+
+        final StringWriter stringWriter2 = new StringWriter();
+        objectMapper.writeValue(stringWriter2, token.getScope());
+        final String tokenScope = stringWriter2.toString();
+
+
+        if (!Objects.equals(parameterScope, tokenScope)) {
+            throw new RuntimeException("scope mismatch");
         }
 
         // create response
@@ -76,7 +97,7 @@ public class ExchangeTokenService {
 
         final WsIdentifier.WsIdentifierBuilder wsIdentifierBuilder = WsIdentifier.builder();
 
-        switch (wsExchangeTokenForIdentifierRequest.getIdentifierType()) {
+        switch (identifierType) {
 
             // no conversion
             case BSN:
@@ -86,7 +107,7 @@ public class ExchangeTokenService {
             // BSN -> ORHANISATION_PSEUDO conversion
             case ORGANISATION_PSEUDO:
                 final Identifier identifier = Identifier.fromBsn(token.getBsn(), token.getScope());
-                final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, wsExchangeTokenForIdentifierRequest.getOrganisation());
+                final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, organisation);
                 wsIdentifierBuilder.type(ORGANISATION_PSEUDO).value(encryptedIdentifier);
                 break;
 

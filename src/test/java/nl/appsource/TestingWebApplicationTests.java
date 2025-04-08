@@ -10,17 +10,13 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalManagementPort;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.util.CollectionUtils;
 
-import java.util.List;
 import java.util.Map;
 
-import static java.util.Map.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.data.MapEntry.entry;
 
@@ -64,7 +60,7 @@ class TestingWebApplicationTests {
     void testGetAtokenExchangeForBSN() {
         // get a token
         final Map<String, Object> getTokenBody = Map.of("sender", "00000008855800191020", "receiver", "00000000123450112345", "identifier",
-            Map.of("type", "BSN", "value", "012345679"));
+            Map.of("type", "BSN", "value", "012345679"), "scope", Map.of("a", "b"));
         final HttpEntity<Map<String, Object>> httpEntityGetToken = new HttpEntity<>(getTokenBody);
         final ResponseEntity<Map> tokenExchange = restTemplate.exchange("/api/v1/getToken", HttpMethod.POST,
             httpEntityGetToken, Map.class);
@@ -76,8 +72,8 @@ class TestingWebApplicationTests {
 
         // change token for identifier
         final String token = (String) tokenExchange.getBody().get("token");
-        final Map<String, String> exchangeTokenBody = Map.of("token", token, "identifierType", "BSN", "organisation", "00000008855800191020");
-        final HttpEntity<Map<String, String>> httpEntityExchangeToken = new HttpEntity<>(exchangeTokenBody);
+        final Map<String, Object> exchangeTokenBody = Map.of("token", token, "identifierType", "BSN", "organisation", "00000008855800191020", "scope", Map.of("a", "b"));
+        final HttpEntity<Map<String, Object>> httpEntityExchangeToken = new HttpEntity<>(exchangeTokenBody);
         final ResponseEntity<Map> identifierExchange = restTemplate.exchange("/api/v1/exchangeToken", HttpMethod.POST,
             httpEntityExchangeToken,
             Map.class);

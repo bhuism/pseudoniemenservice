@@ -1,5 +1,6 @@
 package nl.appsource.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import nl.appsource.model.v1.Identifier;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsExchangeIdentifierRequest;
@@ -11,6 +12,7 @@ import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.Map;
 
 import static nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifierTypes.BSN;
 import static nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifierTypes.ORGANISATION_PSEUDO;
@@ -20,6 +22,8 @@ import static nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifi
 public final class ExchangeIdentifierService {
 
     private final AesGcmSivCryptographerService aesGcmSivCryptographerService;
+
+    private final ObjectMapper objectMapper;
 
     public WsExchangeIdentifierResponse exchangeIdentifier(final WsExchangeIdentifierRequest wsExchangeIdentifierForIdentifierRequest) throws InvalidCipherTextException, IOException {
 
@@ -34,22 +38,18 @@ public final class ExchangeIdentifierService {
         if (BSN.equals(wsIdentifierRequest.getType()) && ORGANISATION_PSEUDO.equals(recipientIdentifierType)) {
 
             // BSN to ORG_PSEUDO
-            final Identifier identifier = Identifier.fromBsn(wsIdentifierRequest.getValue(), "" + wsExchangeIdentifierForIdentifierRequest.getScope());
+            final Identifier identifier = Identifier.fromBsn(wsIdentifierRequest.getValue(), objectMapper.convertValue(wsExchangeIdentifierForIdentifierRequest.getScope(), Map.class));
 
             final String encryptedIdentifier = aesGcmSivCryptographerService.encryptIdentifier(identifier, organisation);
 
-            wsIdentifierBuilder
-                .type(ORGANISATION_PSEUDO)
-                .value(encryptedIdentifier);
+            wsIdentifierBuilder.type(ORGANISATION_PSEUDO).value(encryptedIdentifier);
 
         } else if (ORGANISATION_PSEUDO.equals(wsIdentifierRequest.getType()) && BSN.equals(recipientIdentifierType)) {
 
             // ORG_PSEUDO to BSN
             final String bsn = aesGcmSivCryptographerService.decryptIdentifier(wsIdentifierRequest.getValue(), organisation).getBsn();
 
-            wsIdentifierBuilder
-                .type(BSN)
-                .value(bsn);
+            wsIdentifierBuilder.type(BSN).value(bsn);
 
         } else {
             throw new RuntimeException("Unsupported types for convertion");

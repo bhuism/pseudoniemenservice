@@ -7,7 +7,6 @@ import nl.appsource.pseudoniemenservice.generated.server.model.WsGetTokenRespons
 import nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifier;
 import nl.appsource.service.crypto.AesGcmCryptographerService;
 import nl.appsource.service.crypto.AesGcmSivCryptographerService;
-import nl.appsource.service.serializer.TokenSerializer;
 import org.bouncycastle.crypto.InvalidCipherTextException;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +17,7 @@ import java.io.IOException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -26,11 +26,10 @@ public final class GetTokenService {
 
     private final AesGcmSivCryptographerService aesGcmSivCryptographerService;
     private final AesGcmCryptographerService aesGcmCryptographerService;
-    private final TokenSerializer tokenSerializer;
 
-    public WsGetTokenResponse getWsGetTokenResponse(final String recipientOIN,
-                                                    final WsIdentifier identifier,
-                                                    final String scope)
+    public WsGetTokenResponse getToken(final String recipientOIN,
+                                       final WsIdentifier identifier,
+                                       final Map<String, Object> scope)
         throws InvalidCipherTextException, IOException, InvalidAlgorithmParameterException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, NoSuchAlgorithmException, InvalidKeyException {
 
         final long creationDate = System.currentTimeMillis();

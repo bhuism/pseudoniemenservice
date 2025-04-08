@@ -1,5 +1,6 @@
 package nl.appsource.controller.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.appsource.pseudoniemenservice.generated.server.api.GetTokenApi;
@@ -10,10 +11,15 @@ import nl.appsource.service.GetTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.StringWriter;
+import java.util.Map;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
 public final class GetTokenController implements GetTokenApi, VersionOneController {
+
+    private final ObjectMapper objectMapper;
 
     private final GetTokenService getTokenService;
 
@@ -32,12 +38,13 @@ public final class GetTokenController implements GetTokenApi, VersionOneControll
 
             final WsIdentifier identifier = wsGetTokenRequest.getIdentifier();
 
-            final String scope = "" + wsGetTokenRequest.getScope();
+            final StringWriter stringWriter = new StringWriter();
+            objectMapper.writeValue(stringWriter, wsGetTokenRequest.getScope());
+            final String scope = stringWriter.toString();
 
-            // lookup sender
-            // final Organisation organisation = organisatieRepository.findByOin(sender).orElseThrow(RuntimeException::new);
+            log.info("getToken() sender={}, identifier={}, scope={}", sender, identifier, scope);
 
-            final WsGetTokenResponse wsGetTokenResponse = getTokenService.getWsGetTokenResponse(sender, identifier, scope);
+            final WsGetTokenResponse wsGetTokenResponse = getTokenService.getToken(sender, identifier, (Map<String, Object>) wsGetTokenRequest.getScope());
             return ResponseEntity.ok(wsGetTokenResponse);
         } catch (final Exception e) {
             log.error("", e);

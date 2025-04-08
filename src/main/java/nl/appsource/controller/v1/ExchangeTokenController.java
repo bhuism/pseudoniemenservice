@@ -1,13 +1,18 @@
 package nl.appsource.controller.v1;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import nl.appsource.pseudoniemenservice.generated.server.api.ExchangeTokenApi;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsExchangeTokenRequest;
 import nl.appsource.pseudoniemenservice.generated.server.model.WsExchangeTokenResponse;
+import nl.appsource.pseudoniemenservice.generated.server.model.WsIdentifierTypes;
 import nl.appsource.service.ExchangeTokenService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.StringWriter;
+import java.util.Map;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -15,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 public final class ExchangeTokenController implements ExchangeTokenApi, VersionOneController {
 
     private final ExchangeTokenService exchangeTokenService;
+
+    private final ObjectMapper objectMapper;
 
     /**
      * Handles the exchange of a token and returns the corresponding identifier in a response. This
@@ -29,7 +36,19 @@ public final class ExchangeTokenController implements ExchangeTokenApi, VersionO
     public ResponseEntity<WsExchangeTokenResponse> exchangeToken(final WsExchangeTokenRequest wsExchangeTokenForIdentifierRequest) {
         try {
 
-            return exchangeTokenService.exchangeToken(wsExchangeTokenForIdentifierRequest);
+            final String token = wsExchangeTokenForIdentifierRequest.getToken();
+
+            final WsIdentifierTypes identifierType = wsExchangeTokenForIdentifierRequest.getIdentifierType();
+
+            final StringWriter stringWriter = new StringWriter();
+            objectMapper.writeValue(stringWriter, wsExchangeTokenForIdentifierRequest.getScope());
+            final String scope = stringWriter.toString();
+
+            final String organisation = wsExchangeTokenForIdentifierRequest.getOrganisation();
+
+            log.info("exchangeToken() token={}, identifier={}, scope={}", token, identifierType, scope, organisation);
+
+            return exchangeTokenService.exchangeToken(token, identifierType, (Map<String, Object>) wsExchangeTokenForIdentifierRequest.getScope(), organisation);
 
         } catch (final Exception e) {
             log.error("", e);
