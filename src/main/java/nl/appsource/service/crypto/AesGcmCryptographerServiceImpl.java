@@ -91,8 +91,6 @@ public class AesGcmCryptographerServiceImpl implements AesGcmCryptographerServic
 
     public String encrypt(final String plaintext, final String salt) throws IllegalBlockSizeException, BadPaddingException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidAlgorithmParameterException, InvalidKeyException {
 
-        log.debug("salt: {}", salt);
-
         final Cipher cipher = AesUtil.createCipher();
         final GCMParameterSpec gcmParameterSpec = AesUtil.generateIV();
         final SecretKey secretKey = createSecretKey(salt);
@@ -148,8 +146,6 @@ public class AesGcmCryptographerServiceImpl implements AesGcmCryptographerServic
         InvalidKeyException,
         IllegalBlockSizeException,
         BadPaddingException {
-
-        log.debug("salt: {}", salt);
 
         final Cipher cipher = AesUtil.createCipher();
         final byte[] encryptedWithIV = Base64Util.decode(ciphertextWithIv);
